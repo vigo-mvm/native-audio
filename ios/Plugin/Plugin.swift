@@ -25,9 +25,11 @@ public class NativeAudio: CAPPlugin {
 
         do {
             try self.session.setCategory(AVAudioSession.Category.playback)
+            print("Overriding the session port")
+            try self.session.overrideOutputAudioPort(.speaker)
             try self.session.setActive(false)
         } catch {
-            print("Failed to set session category")
+            print("Failed to set session category or port")
         }
     }
 
