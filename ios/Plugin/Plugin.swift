@@ -52,6 +52,12 @@ public class NativeAudio: CAPPlugin {
     }
 
     @objc func play(_ call: CAPPluginCall) {
+        do {
+            try self.session.overrideOutputAudioPort(.speaker)
+        } catch {
+           print("Failed to set session port")
+        }
+
         let audioId = call.getString(Constant.AssetIdKey) ?? ""
         let time = call.getDouble("time") ?? 0
         if audioId != "" {
