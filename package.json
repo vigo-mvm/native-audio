@@ -81,10 +81,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/capacitor-community/native-audio"
+    "url": "https://github.com/vigo-mvm/native-audio/"
   },
   "bugs": {
-    "url": "https://github.com/capacitor-community/native-audio/issues"
+    "url": "https://github.com/vigo-mvm/native-audio/issues"
   },
   "publishConfig": {
     "access": "public"
