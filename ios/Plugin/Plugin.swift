@@ -25,26 +25,27 @@ public class NativeAudio: CAPPlugin {
 
         do {
             try self.session.setCategory(AVAudioSession.Category.playback)
-            print("Overriding the session port")
-            try self.session.overrideOutputAudioPort(.speaker)
             try self.session.setActive(false)
         } catch {
-            print("Failed to set session category or port")
+            print("Failed to set session category")
         }
     }
 
     @objc func configure(_ call: CAPPluginCall) {
-        self.fadeMusic = call.getBool(Constant.FadeKey, false)
-        do {
-            if call.getBool(Constant.FocusAudio, false) {
-                try self.session.setCategory(AVAudioSession.Category.playback)
-            } else {
-                try self.session.setCategory(AVAudioSession.Category.ambient)
-            }
-        } catch {
-            print("Failed to set setCategory audio")
+        if let fade = call.getBool(Constant.FadeKey) {
+            self.fadeMusic = fade
         }
-        call.resolve()
+        if let focus = call.getBool(Constant.FocusAudio) {
+            do {
+                if focus {
+                    try self.session.setCategory(AVAudioSession.Category.playback)
+                } else {
+                    try self.session.setCategory(AVAudioSession.Category.ambient)
+                }
+            } catch {
+                print("Failed to set setCategory audio")
+            }
+        }
     }
 
     @objc func preload(_ call: CAPPluginCall) {
@@ -52,14 +53,26 @@ public class NativeAudio: CAPPlugin {
     }
 
     @objc func play(_ call: CAPPluginCall) {
-        do {
+        let audioId = call.getString(Constant.AssetIdKey) ?? ""
+        let time = call.getDouble("time") ?? 0
+          do {
+            print("Trying to set session port")
+            print("Cateogry", self.session.category)
+            print("Mode", self.session.mode)
+
+            print("Port", self.session.mode)
+            print("Mode", self.session.mode)
+            print("Mode", self.session.mode)
+
+
             try self.session.overrideOutputAudioPort(.speaker)
+            try self.session.setCategory(AVAudioSession.Category.playback)
+            try self.session.setMode(AVAudioSession.Mode.default)
+            try self.session.setActive(true)
         } catch {
            print("Failed to set session port")
         }
 
-        let audioId = call.getString(Constant.AssetIdKey) ?? ""
-        let time = call.getDouble("time") ?? 0
         if audioId != "" {
             let queue = DispatchQueue(label: "com.getcapacitor.community.audio.complex.queue", qos: .userInitiated)
 
